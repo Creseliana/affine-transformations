@@ -1,4 +1,4 @@
-# affine-transformations
+# Affine transformations
 Executes two-dimensional affine transformations polygon. Polygon is set with specified points. Points are set in world coordinates. 
 Set of buttons helps to execute transformations:
 * Reset - set initial polygon
