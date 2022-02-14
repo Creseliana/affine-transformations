@@ -1,4 +1,4 @@
-package com.creseliana.util;
+package com.creseliana.cglab.service;
 
 public interface MatrixMultiplier {
 
