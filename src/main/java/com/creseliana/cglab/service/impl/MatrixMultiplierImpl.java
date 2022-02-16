@@ -12,13 +12,15 @@ public class MatrixMultiplierImpl implements MatrixMultiplier {
         int secondColumnSize = secondMultiplier[0].length;
 
         if (firstColumnSize != secondRowSize) {
-            return null;
+            throw new RuntimeException();
         }
 
         double[][] result = new double[firstRowSize][secondColumnSize];
 
         for (int i = 0; i < firstRowSize; i++) {
+
             for (int j = 0; j < secondColumnSize; j++) {
+
                 for (int k = 0; k < secondRowSize; k++) {
 
                     result[i][j] += firstMultiplier[i][k] * secondMultiplier[k][j];
@@ -27,6 +29,4 @@ public class MatrixMultiplierImpl implements MatrixMultiplier {
         }
         return result;
     }
-
-
 }

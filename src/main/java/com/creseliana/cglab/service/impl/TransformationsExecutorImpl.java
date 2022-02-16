@@ -16,6 +16,9 @@ public class TransformationsExecutorImpl implements TransformationsExecutor {
 
     private final MatrixMultiplier matrixMultiplier;
     private final MatrixHelper matrixHelper;
+    private final double halfScreenX;
+    private final double halfScreenY;
+    private final double polygonScale;
 
     public void translate(TransformPolygon polygon, double x, double y) {
         double[][] matrix = polygon.getMatrix();
@@ -33,7 +36,8 @@ public class TransformationsExecutorImpl implements TransformationsExecutor {
         executeTransformation(polygon);
     }
 
-    public void rotate(TransformPolygon polygon) {
+    public void rotate(TransformPolygon polygon, double degree) {
+        polygon.setDegree(polygon.getDegree() + degree);
         double[][] matrix = polygon.getMatrix();
         double cos = Math.cos(Math.toRadians(polygon.getDegree()));
         double sin = Math.sin(Math.toRadians(polygon.getDegree()));
@@ -77,14 +81,12 @@ public class TransformationsExecutorImpl implements TransformationsExecutor {
         polygon.getPointList().forEach(point -> {
             double[][] matrixPoint = matrixMultiplier.multiply(polygon.getMatrix(),
                 matrixHelper.convertPointToMatrix(point));
-            matrixPoint[0][0] = 300 + matrixPoint[0][0] * 20;
-            matrixPoint[1][0] = 300 - matrixPoint[1][0] * 20;
+            matrixPoint[0][0] = halfScreenX + matrixPoint[0][0] * polygonScale;
+            matrixPoint[1][0] = halfScreenY - matrixPoint[1][0] * polygonScale;
             pointList.add(matrixHelper.convertMatrixToPoint(matrixPoint));
         });
 
         polygon.getPolygon().getPoints().setAll(getUngroupedPointList(pointList));
-        System.out.println();
-        System.out.println(pointList);
     }
 
     private List<Double> getUngroupedPointList(List<Point2D> groupedPointList) {

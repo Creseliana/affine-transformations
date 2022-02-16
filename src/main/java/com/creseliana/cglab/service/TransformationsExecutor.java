@@ -10,7 +10,7 @@ public interface TransformationsExecutor {
 
     void dilate(TransformPolygon polygon, double index);
 
-    void rotate(TransformPolygon polygon);
+    void rotate(TransformPolygon polygon, double degree);
 
     void reflect(TransformPolygon polygon, boolean x, boolean y);
 

@@ -20,5 +20,6 @@ public class TransformPolygon {
 
     private double degree = 0;
 
-    private double[][] matrix = new double[][]{{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+    private double[][] matrix = new double[][]
+        {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
 }
