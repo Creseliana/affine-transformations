@@ -61,7 +61,7 @@ public class TransformationsExecutorImpl implements TransformationsExecutor {
         if (polygon.getPolygon() == null) {
             Polygon innerPolygon = new Polygon();
             innerPolygon.setStroke(Color.BLACK);
-            innerPolygon.setFill(Color.WHITE);
+            innerPolygon.setFill(Color.TRANSPARENT);
             polygon.setPolygon(innerPolygon);
         }
         polygon.setPointList(pointList);

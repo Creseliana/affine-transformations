@@ -7,21 +7,29 @@ import com.creseliana.cglab.service.TransformationsExecutor;
 import com.creseliana.cglab.service.impl.MatrixHelperImpl;
 import com.creseliana.cglab.service.impl.MatrixMultiplierImpl;
 import com.creseliana.cglab.service.impl.TransformationsExecutorImpl;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     private static final int SHIFT = 1;
+    private static final int SCREEN_SIZE = 600;
+    private static final int HALF_SCREEN_SIZE = 300;
+    private static final int START = 0;
+    private static final int SCALE = 20;
+    private static final int BUTTON_SIZE = 100;
 
     public static void main(String[] args) {
         launch(args);
@@ -46,40 +54,55 @@ public class Main extends Application {
         return builder.toString();
     }
 
+    private static void createAxes(List<Node> nodeList) {
+        Line lineX = new Line(START, HALF_SCREEN_SIZE, SCREEN_SIZE, HALF_SCREEN_SIZE);
+        Line lineY = new Line(HALF_SCREEN_SIZE, START, HALF_SCREEN_SIZE, SCREEN_SIZE);
+        nodeList.add(lineX);
+        nodeList.add(lineY);
+        for (int i = 0; i <= SCREEN_SIZE; i = i + SCALE) {
+            nodeList.add(new Line(i, HALF_SCREEN_SIZE - 5, i, HALF_SCREEN_SIZE + 5));
+            nodeList.add(new Line(HALF_SCREEN_SIZE - 5, i, HALF_SCREEN_SIZE + 5, i));
+        }
+    }
+
     @Override
     public void start(Stage stage) {
+        final List<Node> nodeList = new ArrayList<>();
         final TransformPolygon currentPolygon = new TransformPolygon();
         final TransformationType[] type = new TransformationType[]{TransformationType.NO};
         MatrixMultiplier matrixMultiplier = new MatrixMultiplierImpl();
         MatrixHelper matrixHelper = new MatrixHelperImpl();
         TransformationsExecutor transformationsExecutor = new TransformationsExecutorImpl(
-            matrixMultiplier, matrixHelper, 300, 300, 20);
+            matrixMultiplier, matrixHelper, HALF_SCREEN_SIZE, HALF_SCREEN_SIZE, SCALE);
 
         transformationsExecutor.reset(currentPolygon, getInitialPolygonPoints());
 
         Button resetButton = new Button("reset");
-        resetButton.setPrefWidth(100);
+        resetButton.setPrefWidth(BUTTON_SIZE);
         Button translateButton = new Button("translate");
-        translateButton.setPrefWidth(100);
-        translateButton.setLayoutX(100);
+        translateButton.setPrefWidth(BUTTON_SIZE);
+        translateButton.setLayoutX(BUTTON_SIZE);
         Button dilateButton = new Button("dilate");
-        dilateButton.setPrefWidth(100);
-        dilateButton.setLayoutX(200);
+        dilateButton.setPrefWidth(BUTTON_SIZE);
+        dilateButton.setLayoutX(BUTTON_SIZE * 2);
         Button rotateButton = new Button("rotate");
-        rotateButton.setPrefWidth(100);
-        rotateButton.setLayoutX(300);
+        rotateButton.setPrefWidth(BUTTON_SIZE);
+        rotateButton.setLayoutX(BUTTON_SIZE * 3);
         Button reflectButton = new Button("reflect");
-        reflectButton.setPrefWidth(100);
-        reflectButton.setLayoutX(400);
+        reflectButton.setPrefWidth(BUTTON_SIZE);
+        reflectButton.setLayoutX(BUTTON_SIZE * 4);
         TextField textField = new TextField();
         textField.setEditable(false);
         textField.setLayoutY(30);
-        textField.setPrefWidth(600);
+        textField.setPrefWidth(SCREEN_SIZE);
         textField.setText(pointListToString(currentPolygon.getPolygon().getPoints()));
 
-        Group root = new Group(currentPolygon.getPolygon(), textField,
-            resetButton, translateButton, dilateButton, rotateButton, reflectButton);
-        Scene scene = new Scene(root, 600, 600);
+        createAxes(nodeList);
+        nodeList.addAll(List.of(currentPolygon.getPolygon(), textField,
+            resetButton, translateButton, dilateButton, rotateButton, reflectButton));
+
+        Group root = new Group(nodeList);
+        Scene scene = new Scene(root, SCREEN_SIZE, SCREEN_SIZE);
         stage.setTitle("Affine transformations");
         stage.setScene(scene);
         stage.show();
